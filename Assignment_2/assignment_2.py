@@ -16,12 +16,12 @@ df_join_gt_pred = pd.merge(df_pred, df_gt, on=['Id', 'Id']) # Join the data fram
 nones = [None]*(df_gt.shape[0]-1)
 del df_pred
 
-df_cer_per_row = df_join_gt_pred.apply(lambda x: fastwer.score_sent(x.PRED, x.GT, char_level=True), axis=1)
-df_wer_per_row = df_join_gt_pred.apply(lambda x: fastwer.score_sent(x.PRED, x.GT), axis=1)
+df_cer_per_row = df_join_gt_pred.apply(lambda x: fastwer.score_sent(x.PRED, x.GT, char_level=True), axis=1) # Find the CER value for each row
+df_wer_per_row = df_join_gt_pred.apply(lambda x: fastwer.score_sent(x.PRED, x.GT), axis=1) # Find the WER value for each row
 df_output['CER per Row'] = list(df_cer_per_row.to_numpy())
 df_output['WER per Row'] = list(df_wer_per_row.to_numpy())
-df_output['CER corpus'] = [fastwer.score(df_join_gt_pred.PRED, df_join_gt_pred.GT, char_level=True), *nones]
-df_output['WER corpus'] = [fastwer.score(df_join_gt_pred.PRED, df_join_gt_pred.GT), *nones]
+df_output['CER corpus'] = [fastwer.score(df_join_gt_pred.PRED, df_join_gt_pred.GT, char_level=True), *nones] # Find the CER value for all the sentences
+df_output['WER corpus'] = [fastwer.score(df_join_gt_pred.PRED, df_join_gt_pred.GT), *nones] # Find the WER value for all the sentences
 
 df_characters_per_row = df_gt['GT'].apply(lambda row: len(row)) # Count the number of characters within each GT cell
 df_output['Total Lines'] = [df_characters_per_row.shape[0], *nones]
